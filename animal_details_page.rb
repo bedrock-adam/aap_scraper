@@ -1,4 +1,4 @@
-class ResultPage
+class AnimalDetailsPage
   def initialize(uri)
     self.uri = uri
     raise "HTTP Error #{resp.code}]: #{uri}" unless ok?
@@ -63,7 +63,7 @@ class ResultPage
       compact
   end
 
-  def attrs
+  def attributes
     {
       uri: uri.to_s,
       name: name,

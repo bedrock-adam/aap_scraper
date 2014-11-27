@@ -1,18 +1,14 @@
-class ResultsPage
+class SearchResultsPage
   def self.first_page
-    @first_page ||= ResultsPage.new first_page_uri
+    @first_page ||= SearchResultsPage.new first_page_uri
   end
 
   def self.first_page_uri
-    URI.parse('http://adoptapet.com.au/search/searchResults.asp?task=search&searchid=&advanced=&s=&animalType=&searchType=4&state=&regionID=&submitbtn=Find+Animals')
-  end
-
-  def ok?
-    @is_ok ||= resp.code == '200'
+    URI.parse 'http://adoptapet.com.au/search/searchResults.asp?task=search&searchid=&advanced=&s=&animalType=&searchType=4&state=&regionID=&submitbtn=Find+Animals'
   end
 
   def next_page
-    @next_page ||= more_pages? ? ResultsPage.new(next_page_uri) : nil
+    @next_page ||= more_pages? ? SearchResultsPage.new(next_page_uri) : nil
   end
 
   def more_pages?
@@ -20,7 +16,7 @@ class ResultsPage
   end
 
   def next_page_uri
-    @next_page_uri ||= URI.parse doc.xpath("id('searchPageTableTop')//a[contains(text(), '>>')]")
+    @next_page_uri ||= URI.parse doc.xpath("id('searchPageTableTop')//a[contains(text(), '>>')]/@href")
   end
 
   def links
@@ -40,6 +36,10 @@ class ResultsPage
   def initialize(uri)
     self.uri = uri
     raise "HTTP Error #{resp.code}]: #{uri}" unless ok?
+  end
+
+  def ok?
+    @is_ok ||= resp.code == '200'
   end
 
   def resp
